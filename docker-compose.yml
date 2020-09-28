@@ -1,0 +1,28 @@
+version: '3'
+
+networks:
+  traefik_web:
+    external: true
+
+services:
+  web2py:
+    image: web2py:latest
+    container_name: web2py
+    environment:
+      - WEB2PY_PASSWORD=password
+      - WEB2PY_ADMIN_SECURITY_BYPASS=true
+    volumes:
+      - ./applications:/web2py/applications
+    networks:
+      traefik_web:
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "traefik_web"
+      traefik.http.routers.web2py.rule: "Host(`web2py.example.com`)"
+      traefik.http.routers.web2py.entrypoints: "web"
+      traefik.http.routers.web2py.service: "web2py-svc"
+      traefik.http.services.web2py-svc.loadbalancer.server.port: "8000"
+      traefik.http.routers.web2pyadmin.rule: "Host(`web2py.example.com`)"
+      traefik.http.routers.web2pyadmin.entrypoints: "web-secure"
+      traefik.http.routers.web2pyadmin.service: "web2py-secure-svc"
+      traefik.http.services.web2py-secure-svc.loadbalancer.server.port: "9090"

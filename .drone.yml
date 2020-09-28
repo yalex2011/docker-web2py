@@ -1,0 +1,9 @@
+pipeline:
+  docker:
+    image: plugins/docker
+    settings:
+      repo: foo/bar
+      tags:
+        - latest
+        - '0.0.2'
+    registry: registry.example.com:5000
